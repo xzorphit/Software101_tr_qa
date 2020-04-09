@@ -14,6 +14,15 @@ class formAuthentication extends basePage {
 
     get formAuthenticationPasswordField(){        return $('//*[@id="login"]/div[2]/div/input') }
 
+    get formAuthenticationLoginBtn(){
+        return $('//*[@id="login"]/button') }
+
+    get formAuthenticationFlash(){
+        return $('//*[@id="flash"]') }
+
+
+    
+
     goToFormAuthentication() {
 
         console.log('step: going to form authentication page')
