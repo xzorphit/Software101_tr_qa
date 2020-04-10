@@ -2,11 +2,20 @@ import basePage from "./base.page";
 
 class dropDown extends basePage {
 
-    get dropDownHeader(){         return $('//*[@id="content"]/div/h3') }
+    get dropDownHeader(){
+        return $('//*[@id="content"]/div/h3') }
 
-    get dropDownField(){        return $('//*[@id="dropdown"]') }
+    get dropDownField(){
+        return $('//*[@id="dropdown"]') }
 
-    get dropDownOptions(){        return $$('//*[@id="dropdown"]/option')}
+    get dropDownOptions(){
+        return $$('//*[@id="dropdown"]/option')}
+
+    get dropDownOption1(){
+        return $('//*[@id="dropdown"]/option[2]') }
+    
+    get dropDownOption2(){
+        return $('//*[@id="dropdown"]/option[3]') }
 
     goToDropDown() {
 
