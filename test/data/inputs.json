@@ -2,19 +2,19 @@
 
     {        
         "un":" ",
-        "ps":"SuperSecretPassword!",
+        "pw":"SuperSecretPassword!",
         "expectedBanner":"Your username is invalid!"
     },
 
     {        
         "un":"tomsmith",
-        "ps":"",
+        "pw":"",
         "expectedBanner":"Your password is invalid!"
     },
 
     {
         "un":"tomsmith",
-        "ps":"SuperSecretPassword!",
+        "pw":"SuperSecretPassword!",
         "expectedBanner":"You logged into a secure area!"
     }
 ]

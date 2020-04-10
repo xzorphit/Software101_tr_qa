@@ -8,7 +8,7 @@ class formAuthentication extends basePage {
 
     get formAuthenticationUsername(){        return $('//*[@id="login"]/div[1]/div/label') }
 
-    get formAuthenticationUsernameField(){        return $('//*[@id="login"]/div[1]/div/input') }
+    get formAuthenticationUsernameField(){        return $('//*[@id="username"]') }
 
     get formAuthenticationPassword(){        return $('//*[@id="login"]/div[2]/div/label') }
 
