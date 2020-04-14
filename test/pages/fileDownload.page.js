@@ -10,13 +10,19 @@ class fileDownload extends basePage {
 
     get fileDownloadexmpleAnkers(){        return $$('//*[@id="content"]/div/a').length }
 
+    get links() { return $$('a')}
+
+    get firstlink() {return $$('//*[@id="content"]/div/a[1]')}
+
     goToFileDownload() {
 
         console.log('step: going to file download page')
 
-        browser.url('/dynamic_loading')
+        browser.url('/download')
 
-        this.fileDownloadHeader.waitForDisplayed()
+        this.fileDownloadHeader.waitForDisplayed();
+
+        this.links[0].waitForDisplayed();
 
         console.log('step: on the file download page')
 
