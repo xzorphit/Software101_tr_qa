@@ -19,7 +19,7 @@ describe('As a User, test the File Download page', () => {
             fs.mkdirSync(downloadDir)
         }
 
-        //Suppossedly used for when running headless but breaks the script
+        //Suppossed to be used for when running headless but breaks this specific Spec
         //browser.sendCommand('Page.setDownloadBehavior', { 'behavior':'allow','downloadPath': downloadDir });
 
         
