@@ -2,6 +2,13 @@ const path = require('path');
 const fs = require('fs');
 
 const headless = process.env.headless;
+const debug = process.env.debug;
+
+//sets default timeout to 2minutes or 120 seconds
+const defaultTimeOut = 120000;
+
+//puts caught errors into an array that will be listed so that i dont have to go searching through logs to find it.
+const caughtErrors = []
 
 
 global.downloadDir = path.join(__dirname, 'tempDownload');
@@ -47,7 +54,9 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+    
+    //this says if debugging is true then run a max instance of 1 if not then run a max of 10. This is called Ternary ( ? = if true,  : = otherwise ) i did the same below for chrome
+    maxInstances: debug ? 1 : 10,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -57,7 +66,7 @@ exports.config = {
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instances available you can make sure that not more than
         // 5 instances get started at a time.
-        maxInstances: 5,
+        maxInstances: debug ? 1 : 5,
         //
         browserName: 'chrome',
         'goog:chromeOptions': {
@@ -94,6 +103,9 @@ exports.config = {
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
     logLevel: 'info',
+
+    //this says if headless is true then print logs to logs/terminal folder (which it eill create automatically) otherwise dont do anything
+    outputDir: headless ? './logs/terminal' : '', 
     //
     // Set specific log levels per logger
     // loggers:
@@ -111,7 +123,9 @@ exports.config = {
     //
     // If you only want to run your tests until a specific amount of tests have failed use
     // bail (default is 0 - don't bail, run all tests).
-    bail: 0,
+    //if debug is there bail after 1 otherwise keep going. if it bails during a debug dont retry but if debug is not present then try 1 more time
+    bail: debug ? 1 : 0,
+    specFileRetries: debug ? 0 : 1,
     //
     // Set a base URL in order to shorten url command calls. If your `url` parameter starts
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
@@ -155,7 +169,7 @@ exports.config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 9999999,
+        timeout: debug ? 9999999 : defaultTimeOut,
         bail: true,
         compilers: [
             '@babel/register',
@@ -226,8 +240,21 @@ exports.config = {
     /**
      * Function to be executed after a test (in Mocha/Jasmine).
      */
-    // afterTest: function (test, context, { error, result, duration, passed, retries }) {
-    // },
+
+    //this will take a screenshot of the error with the date and save it to that location. print out the error in the terminal. then pause if debug is there : keep going. this way, i dont have to tell each spec to debug at problem areas
+     afterTest: function (test, context, { error, result, duration, passed, retries }) {
+         const date = Date.now()
+
+         if (passed === false ) {
+             browser.saveScreenshot(`./logs/errorShots/fail-${date}.png`);
+             //the above line of code is using ` not '  `is from the ~ key. it allows functions to be passed inside of strings
+
+             console.error(caughtErrors);
+
+             debug ? browser.debug() : ''
+             
+         }
+     },
     /**
      * Hook that gets executed after the suite has ended
      * @param {Object} suite suite details
@@ -241,8 +268,13 @@ exports.config = {
      * @param {Number} result 0 - command success, 1 - command error
      * @param {Object} error error object if any
      */
-    // afterCommand: function (commandName, args, result, error) {
-    // },
+
+     //this grabs the error and places them all in one space so that i do not have to go looking from them scattered throughout terminal
+     afterCommand: function (commandName, args, result, error) {
+         if (Error) {
+            caughtErrors.push(error)
+         }
+    },
     /**
      * Gets executed after all tests are done. You still have access to all global variables from
      * the test.
